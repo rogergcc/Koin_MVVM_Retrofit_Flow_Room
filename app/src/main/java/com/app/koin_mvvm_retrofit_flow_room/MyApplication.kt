@@ -1,8 +1,8 @@
 package com.app.koin_mvvm_retrofit_flow_room
 
 import android.app.Application
-import com.app.koin_mvvm_retrofit_flow_room.di.appModule
 import com.app.koin_mvvm_retrofit_flow_room.di.dataBaseModule
+import com.app.koin_mvvm_retrofit_flow_room.di.networkModule
 import com.app.koin_mvvm_retrofit_flow_room.di.remoteDataSourceModule
 import com.app.koin_mvvm_retrofit_flow_room.di.repositoryModule
 import com.app.koin_mvvm_retrofit_flow_room.di.viewModelModule
@@ -17,7 +17,7 @@ class MyApplication : Application(){
         startKoin {
             androidContext(this@MyApplication)
             androidLogger()
-            modules(appModule, remoteDataSourceModule, repositoryModule, viewModelModule,
+            modules(networkModule, remoteDataSourceModule, repositoryModule, viewModelModule,
                 dataBaseModule)
         }
     }
