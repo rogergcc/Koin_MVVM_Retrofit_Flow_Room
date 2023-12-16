@@ -24,7 +24,7 @@ class PostListActivity : AppCompatActivity() {
         activityMainBinding = DataBindingUtil.setContentView(this@PostListActivity, R.layout.activity_post_list)
         init()
         getPostsAPI()
-        apiGetPosts()
+        observeApiPostData()
         observePostDBData()
     }
 
@@ -39,7 +39,7 @@ class PostListActivity : AppCompatActivity() {
     }
 
 
-    private fun apiGetPosts() {
+    private fun observeApiPostData() {
         try {
             mainViewModel.responseposts.observe(this) { response ->
                 val apiResultHandler = ApiResultHandler<List<Post>>(this@PostListActivity,
@@ -48,13 +48,13 @@ class PostListActivity : AppCompatActivity() {
                     },
                     onSuccess = { data ->
                         showProgress(false)
+                        isSwipeRefreshing(false)
                         data?.let{mainViewModel.insertAllPostIntoDb(it)}
                         getPostsFromDB()
-                        activityMainBinding.swipeRefreshLayout.isRefreshing = false
                     },
                     onFailure = {
                         showProgress(false)
-                        activityMainBinding.swipeRefreshLayout.isRefreshing = false
+                        isSwipeRefreshing(false)
                         getPostsFromDB()
                     })
                 apiResultHandler.handleApiResult(response)
@@ -66,6 +66,9 @@ class PostListActivity : AppCompatActivity() {
 
     private fun showProgress(isShown:Boolean)= if(isShown) activityMainBinding.progress.visibility = View.VISIBLE else activityMainBinding.progress.visibility = View.GONE
 
+    private fun isSwipeRefreshing(isRefreshing: Boolean) {
+        activityMainBinding.swipeRefreshLayout.isRefreshing = isRefreshing
+    }
     private fun getPostsAPI() {
         mainViewModel.getPostsList()
     }
