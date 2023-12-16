@@ -1,15 +1,11 @@
 package com.app.koin_mvvm_retrofit_flow_room.utils
 
-sealed class NetWorkResult<out T>(val status: ApiStatus, val data: T?, val message: String?) {
+sealed class NetWorkResult<T>(val status: ApiStatus, val data: T?=null, val message: String?=null) {
 
-    data class Success<out T>(val _data: T?) :
-        NetWorkResult<T>(status = ApiStatus.SUCCESS, data = _data, message = null)
+    data class Success<T>(val _data: T?) : NetWorkResult<T>(status = ApiStatus.SUCCESS, data = _data, message = null)
+    data class Error<T>(val exception: String) : NetWorkResult<T>(status = ApiStatus.ERROR, message = exception)
+    data class Loading<T>(val isLoading: Boolean) : NetWorkResult<T>(status = ApiStatus.LOADING)
 
-    data class Error<out T>(val _data: T?, val exception: String) :
-        NetWorkResult<T>(status = ApiStatus.ERROR, data = _data, message = exception)
-
-    data class Loading<out T>(val isLoading: Boolean) :
-        NetWorkResult<T>(status = ApiStatus.LOADING, data = null, message = null)
 }
 
 enum class ApiStatus {

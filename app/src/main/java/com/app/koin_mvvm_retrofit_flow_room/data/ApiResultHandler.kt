@@ -10,9 +10,9 @@ import com.app.koin_mvvm_retrofit_flow_room.utils.NetWorkResult
 import com.app.koin_mvvm_retrofit_flow_room.utils.Utils
 import kotlin.reflect.full.memberProperties
 
-class ApiResultHandler<T>(private val context: Context,  private val onLoading: () -> Unit, private val onSuccess: (T?) -> Unit, private val onFailure: (T?) -> Unit) {
+class ApiResultHandler<T>(private val context: Context,  private val onLoading: () -> Unit, private val onSuccess: (T?) -> Unit, private val onFailure: () -> Unit) {
 
-    fun handleApiResult(result: NetWorkResult<T?>) {
+    fun handleApiResult(result: NetWorkResult<T>) {
         when (result.status) {
             ApiStatus.LOADING -> {
                onLoading()
@@ -22,20 +22,8 @@ class ApiResultHandler<T>(private val context: Context,  private val onLoading: 
             }
 
             ApiStatus.ERROR -> {
-                onFailure(result.data)
-                when (result.data?.getField<String>("ErrorCode") ?: "0") {
-                    API_FAILURE_CODE -> {
-                        Utils.showAlertDialog(context, result.message.toString())
-                    }
-                    API_INTERNET_CODE -> {
-                        //Show Internet Error
-                        Utils.showAlertDialog(context, API_INTERNET_MESSAGE)
-                    }
-                    else -> {
-                        //Something went wrong dialog
-                        Utils.showAlertDialog(context, API_SOMETHING_WENT_WRONG_MESSAGE)
-                    }
-                }
+                onFailure()
+                result.message?.let { Utils.showAlertDialog(context, it) }
             }
         }
     }

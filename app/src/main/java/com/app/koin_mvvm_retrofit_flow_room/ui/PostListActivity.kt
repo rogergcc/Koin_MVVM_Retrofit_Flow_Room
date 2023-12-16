@@ -44,19 +44,18 @@ class PostListActivity : AppCompatActivity() {
             mainViewModel.responseposts.observe(this) { response ->
                 val apiResultHandler = ApiResultHandler<List<Post>>(this@PostListActivity,
                     onLoading = {
-                      // showProgress(true)
-                        activityMainBinding.progress.visibility=View.VISIBLE
+                       showProgress(true)
                     },
                     onSuccess = { data ->
-                        activityMainBinding.progress.visibility=View.GONE
-                      //  data?.let { postListAdapter.setPosts(it) }
+                        showProgress(false)
                         data?.let{mainViewModel.insertAllPostIntoDb(it)}
                         getPostsFromDB()
                         activityMainBinding.swipeRefreshLayout.isRefreshing = false
                     },
                     onFailure = {
-                       // showProgress(false)
-                        activityMainBinding.progress.visibility=View.GONE
+                        showProgress(false)
+                        activityMainBinding.swipeRefreshLayout.isRefreshing = false
+                        getPostsFromDB()
                     })
                 apiResultHandler.handleApiResult(response)
             }
@@ -65,6 +64,7 @@ class PostListActivity : AppCompatActivity() {
         }
     }
 
+    private fun showProgress(isShown:Boolean)= if(isShown) activityMainBinding.progress.visibility = View.VISIBLE else activityMainBinding.progress.visibility = View.GONE
 
     private fun getPostsAPI() {
         mainViewModel.getPostsList()
@@ -72,7 +72,6 @@ class PostListActivity : AppCompatActivity() {
     private fun getPostsFromDB() {
         mainViewModel.getAllPostsFromDb()
     }
-
     private fun observePostDBData() {
         try {
             mainViewModel.posts.observe(this) { data ->
