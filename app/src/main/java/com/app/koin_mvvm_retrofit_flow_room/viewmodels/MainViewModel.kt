@@ -3,6 +3,7 @@ package com.app.koin_mvvm_retrofit_flow_room.viewmodels
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.koin_mvvm_retrofit_flow_room.data.Post
 import com.app.koin_mvvm_retrofit_flow_room.data.Repository
@@ -10,7 +11,10 @@ import com.app.koin_mvvm_retrofit_flow_room.db.PostDao
 import com.app.koin_mvvm_retrofit_flow_room.utils.NetWorkResult
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: Repository, application: Application, private val dao: PostDao): BaseViewModel(application) {
+class MainViewModel(
+    private val repository: Repository,
+    private val dao: PostDao
+) : ViewModel() {
 
     private val _responseposts: MutableLiveData<NetWorkResult<List<Post>>> = MutableLiveData()
     val responseposts: LiveData<NetWorkResult<List<Post>>> = _responseposts
@@ -20,7 +24,7 @@ class MainViewModel(private val repository: Repository, application: Application
 
     // get data from api
     fun getPostsList() = viewModelScope.launch {
-        repository.getPostList(context).collect { values ->
+        repository.getPostList().collect { values ->
             _responseposts.value = values
         }
     }

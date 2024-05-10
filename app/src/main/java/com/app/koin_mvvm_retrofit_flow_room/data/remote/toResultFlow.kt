@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 
-inline fun <reified T> toResultFlow(context: Context, crossinline call: suspend () -> Response<T>): Flow<NetWorkResult<T>> {
+
+
+inline fun <reified T> toResultFlow(isInternetConnected: Boolean, crossinline call: suspend () -> Response<T>): Flow<NetWorkResult<T>> {
     return flow {
-        val isInternetConnected = Utils.hasInternetConnection(context)
         if (isInternetConnected) {
             emit(NetWorkResult.Loading(true))
             try {
