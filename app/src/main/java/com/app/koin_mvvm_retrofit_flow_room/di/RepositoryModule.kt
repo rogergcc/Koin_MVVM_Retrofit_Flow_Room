@@ -13,6 +13,7 @@ val repositoryModule = module {
 // Path: app/src/main/java/com/app/koin_mvvm_retrofit_flow_room/di/RepositoryModule.kt
 // check https://github.com/Droid-Thiru/Android-Clean-Architecture-MVVM-Koin-Room-Rxjava-DataBinding/blob/master/app/src/main/java/com/thiru/cleanarchisample/di/Module.kt#L35
 
+// for later have interface and implementation
 //val repositoryModule = module {
 //    single<IRepository> { RepositoryImpl(get()) }
 //}
